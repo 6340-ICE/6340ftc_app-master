@@ -98,8 +98,8 @@ public abstract class Team6340Controls extends LinearOpMode {
 
         //Initialize robot hardware
         //Begin with the chassis
-        leftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftFront");
-        rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFront");
+        leftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftMotor");
+        rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightMotor");
 
 
         //Reset the encoders on the chassis to 0
@@ -115,10 +115,10 @@ public abstract class Team6340Controls extends LinearOpMode {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Initialize the servos
-       blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
+       //blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
 
         //Initialize sensors
-        blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
+        //blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
 
 
         //Initialize Vuforia extension

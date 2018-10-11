@@ -107,11 +107,6 @@ public abstract class Team6475Controls extends LinearOpMode {
         //Begin with the chassis
         leftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftFront");
         rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFront");
-        leftMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftRear");
-        rightMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightRear");
-        relicExtendMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "relicExtendMotor");
-        relicRetractMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "relicRetractMotor");
-        glyphLiftMotor = hardwareMap.get(DcMotor.class, "glyphlift");
 
         //Reset the encoders on the chassis to 0
         leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
