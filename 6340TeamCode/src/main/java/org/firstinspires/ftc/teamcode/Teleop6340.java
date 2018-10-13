@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 //Define as teleop
-@TeleOp(name = "6340 Test Teleop", group = "Linear Opmode")
+@TeleOp(name = "6340Teleop", group = "Linear Opmode")
 
 public class Teleop6340 extends Team6340Controls {
 

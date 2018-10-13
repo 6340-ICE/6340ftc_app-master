@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.sun.tools.javac.comp.Todo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -45,7 +45,6 @@ public abstract class Team6340Controls extends LinearOpMode {
     protected BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double absoluteAngle, power = .30, correction;
-    PIDController pidRotate, pidDrive;
 
     // Orientation and acceleration variables from the built in 9-axis accelerometer
     protected Orientation angles;
@@ -79,9 +78,6 @@ public abstract class Team6340Controls extends LinearOpMode {
     static final double HEADING_THRESHOLD = 2.5;      // As tight as we can make it with an integer gyro
     static final double P_TURN_COEFF = .005;     // .02 Larger is more responsive, but also less stable
     static final double P_DRIVE_COEFF = .010;     // .05 Larger is more responsive, but also less stable
-
-
-
 
     //Initialize Vuforia variables
     VuforiaTrackables relicTrackables;
@@ -122,15 +118,7 @@ public abstract class Team6340Controls extends LinearOpMode {
 
 
         //Initialize Vuforia extension
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parametersV = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parametersV.vuforiaLicenseKey = "AfRvW7T/////AAAAGSZSz12Y5EPmopiqX9Cc17EX1TB9P/jfFGOFM0F4JDpeOV7v14oYyRCIzW09fiRPCvR2ivZcx3tHGuJTENamTxdwxZYSE72C9xuk7pmCjFeP5wfD3zF7bgYCrcVKk6Piahys8ccRRg93Dw4tC0kqkwrW5iz+u1x6+o6CctbGc8nxY3AzaH3W9HTU+QeGLv1xAx05YFOHwSgzNn9mZJYu2rYu2pBdKmb2Y918AlOwEC8QvbSARqI4aCKQle+Nplm/dBTFWO1p6sBIA8A7HHeb2vKcwHfkD10HEzDsZYuQNVxERAJ+7hfmmRLHLmtQJqXTWsQ6mMlKruGtm+s8m+4LhIEZy3dHnX4131J4bvSz1V6f";
-        parametersV.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //Set camera
-        vuforia = ClassFactory.createVuforiaLocalizer(parametersV);
-        //Get the assets for Vuforia
-        relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
-        relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        //TODO add RoverRuckus Vuforia Info
 
         //Initialize Gryo
         // Set up the parameters with which we will use our IMU. Note that integration
@@ -151,14 +139,9 @@ public abstract class Team6340Controls extends LinearOpMode {
         imu.initialize(parametersG);
 
 
-        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.005, 0, 0);
 
-        // Set PID proportional value to produce non-zero correction value when robot veers off
-        // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.015, 0, .015); //Oscillation starts at Kp=.030
 
-        telemetry.addData("Mode", "calibrating...");
+                telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
         // make sure the imu gyro is calibrated before continuing.
@@ -490,109 +473,6 @@ public abstract class Team6340Controls extends LinearOpMode {
 
 
 
-    /**
-     * Sets the speed of the lifting mechanism.
-     * NOTE: the glyph lifting motor behaves like a continuous rotation servo, so this method
-     * converts this value to the servo equivalent.
-     *
-     * @param speed the speed of the glyph-lifting mechanism, where -1.0 is the maximum
-     *              downward speed, and +1.0 is the maximum upward speed.
-     **/
-
-
-
-    // Set up parameters for driving in a straight line.
-
-    /**
-     * Method to drive on a fixed compass bearing (angle), based on encoder counts.
-     * Move will stop if either of these conditions occur:
-     * 1) Move gets to the desired position
-     * 2) Driver stops the opmode running.
-     *
-     * @param power    Target speed for forward motion.  Should allow for _/- variance for adjusting heading
-     * @param distance Distance (in inches) to move from current position.  Negative distance means move backwards.
-     * @param angle    Absolute Angle (in Degrees) relative to last gyro reset.
-     *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                 If a relative angle is required, add/subtract from current heading.
-     * @param timeout  the number of seconds to take control of the autonomous program
-     *                 before giving up
-     */
-
-    protected void drive(double power, double distance, double angle, double timeout) {
-        //Ensure the motors are in the right configuration
-        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
-        int newLeftTarget;
-        int newRightTarget;
-        int moveCounts;
-        double leftPower;
-        double rightPower;
-
-        pidDrive.setSetpoint(angle);
-        pidDrive.setOutputRange(-power, power);
-        pidDrive.setInputRange(-179, 180);
-        pidDrive.enable();
-
-        // drive until end of period.
-
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            moveCounts = (int) (distance * COUNTS_PER_INCH);
-            newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
-            newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
-
-            // Set Target and Turn On RUN_TO_POSITION
-            leftMotor.setTargetPosition(newLeftTarget);
-            rightMotor.setTargetPosition(newRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            leftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            leftMotor.setTargetPositionTolerance(100);
-            rightMotor.setTargetPositionTolerance(100);
-
-            // Use PID with imu input to drive in a straight line.
-
-            double timeoutTime = runtime.seconds() + timeout;
-            // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() && (leftMotor.isBusy() && rightMotor.isBusy()) && runtime.seconds() <= timeoutTime) {
-                correction = pidDrive.performPID(getAngle());
-
-                // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0) correction *= -1.0;
-
-                leftPower = power - correction;
-                rightPower = power + correction;
-
-                // set power levels.
-
-                leftDrive(leftPower);
-                rightDrive(rightPower);
-
-                telemetry.addData("1 imu heading", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
-                telemetry.addData("2 global heading", absoluteAngle);
-                telemetry.addData("3 correction", correction);
-                // Display drive status for the driver.
-                telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
-                telemetry.addData("Actual", "%7d:%7d", leftMotor.getCurrentPosition(), rightMotor.getCurrentPosition());
-                telemetry.addData("Speed", "%5.2f:%5.2f", leftPower, rightPower);
-                telemetry.update();
-                telemetry.update();
-
-
-
-                // Stop all motion;
-                leftDrive(0);
-                rightDrive(0);
-
-            }
-        }
-    }
-
-
-
 
     /**
      * Get current cumulative angle rotation from last reset.
@@ -621,411 +501,8 @@ public abstract class Team6340Controls extends LinearOpMode {
 
     }
 
-    /**
-     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
-     *
-     * @param degrees Degrees to turn, + is left - is right
-     */
-    protected void turnToHeading(int degrees, double power) {
-        // restart imu angle tracking.
-        //resetAngle();
-
-        // start pid controller. PID controller will monitor the turn angle with respect to the
-        // target angle and reduce power as we approach the target angle with a minimum of 20%.
-        // This is to prevent the robots momentum from overshooting the turn after we turn off the
-        // power. The PID controller reports onTarget() = true when the difference between turn
-        // angle and target angle is within 2% of target (tolerance). This helps prevent overshoot.
-        // The minimum power is determined by testing and must enough to prevent motor stall and
-        // complete the turn. Note: if the gap between the starting power and the stall (minimum)
-        // power is small, overshoot may still occur. Overshoot is dependant on the motor and
-        // gearing configuration, starting power, weight of the robot and the on target tolerance.
-        //Ensure the motors are in the right configuration
-        //Reset the encoders on the chassis to 0
-        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
-        pidRotate.reset();
-        pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(-179, 180);
-        pidRotate.setOutputRange(.1, power);
-        pidRotate.setTolerance(2);
-        pidRotate.enable();
-
-        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
-        // clockwise (right).
-
-        // rotate until turn is completed.
-
-        if (degrees < 0) {
-            // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0) {
-                leftDrive(power);
-                rightDrive(-power);
-                sleep(100);
-            }
-
-            do {
-                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                leftDrive(-power);
-                rightDrive(power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
-        } else    // left turn.
-            do {
-                power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                leftDrive(-power);
-                rightDrive(power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
-
-        telemetry.addData("1 imu heading", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
-        telemetry.addData("2 global heading", absoluteAngle);
-        telemetry.addData("3 correction", correction);
-        telemetry.update();
-
-        // turn the motors off.
-        rightDrive(0);
-        leftDrive(0);
-
-        // wait for rotation to stop.
-        sleep(500);
-
-
-    }
 
 
 
-    public class PIDController {
-        private double m_P;                                 // factor for "proportional" control
-        private double m_I;                                 // factor for "integral" control
-        private double m_D;                                 // factor for "derivative" control
-        private double m_input;                 // sensor input for pid controller
-        private double m_maximumOutput = 1.0;   // |maximum output|
-        private double m_minimumOutput = -1.0;  // |minimum output|
-        private double m_maximumInput = 0.0;    // maximum input - limit setpoint to this
-        private double m_minimumInput = 0.0;    // minimum input - limit setpoint to this
-        private boolean m_continuous = false;   // do the endpoints wrap around? eg. Absolute encoder
-        private boolean m_enabled = false;              //is the pid controller enabled
-        private double m_prevError = 0.0;           // the prior sensor input (used to compute velocity)
-        private double m_totalError = 0.0;      //the sum of the errors for use in the integral calc
-        private double m_tolerance = 0.02;          //the percentage error that is considered on target
-        private double m_setpoint = 0.0;
-        private double m_error = 0.0;
-        private double m_result = 0.0;
 
-        /**
-         * Allocate a PID object with the given constants for P, I, D
-         *
-         * @param Kp the proportional coefficient
-         * @param Ki the integral coefficient
-         * @param Kd the derivative coefficient
-         */
-        public PIDController(double Kp, double Ki, double Kd) {
-            m_P = Kp;
-            m_I = Ki;
-            m_D = Kd;
-        }
-
-        /**
-         * Read the input, calculate the output accordingly, and write to the output.
-         * This should only be called by the PIDTask
-         * and is created during initialization.
-         */
-        private void calculate() {
-            int sign = 1;
-
-            // If enabled then proceed into controller calculations
-            if (m_enabled) {
-                // Calculate the error signal
-                m_error = m_setpoint - m_input;
-
-                // If continuous is set to true allow wrap around
-                if (m_continuous) {
-                    if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
-                        if (m_error > 0) m_error = m_error - m_maximumInput + m_minimumInput;
-                        else m_error = m_error + m_maximumInput - m_minimumInput;
-                    }
-                }
-
-                // Integrate the errors as long as the upcoming integrator does
-                // not exceed the minimum and maximum output thresholds.
-
-                if ((Math.abs(m_totalError + m_error) * m_I < m_maximumOutput) && (Math.abs(m_totalError + m_error) * m_I > m_minimumOutput))
-                    m_totalError += m_error;
-
-                // Perform the primary PID calculation
-                m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError);
-
-                // Set the current error to the previous error for the next cycle.
-                m_prevError = m_error;
-
-                if (m_result < 0) sign = -1;    // Record sign of result.
-
-                // Make sure the final result is within bounds. If we constrain the result, we make
-                // sure the sign of the constrained result matches the original result sign.
-                if (Math.abs(m_result) > m_maximumOutput) m_result = m_maximumOutput * sign;
-                else if (Math.abs(m_result) < m_minimumOutput) m_result = m_minimumOutput * sign;
-            }
-        }
-
-        /**
-         * Set the PID Controller gain parameters.
-         * Set the proportional, integral, and differential coefficients.
-         *
-         * @param p Proportional coefficient
-         * @param i Integral coefficient
-         * @param d Differential coefficient
-         */
-        public void setPID(double p, double i, double d) {
-            m_P = p;
-            m_I = i;
-            m_D = d;
-        }
-
-        /**
-         * Get the Proportional coefficient
-         *
-         * @return proportional coefficient
-         */
-        public double getP() {
-            return m_P;
-        }
-
-        /**
-         * Get the Integral coefficient
-         *
-         * @return integral coefficient
-         */
-        public double getI() {
-            return m_I;
-        }
-
-        /**
-         * Get the Differential coefficient
-         *
-         * @return differential coefficient
-         */
-        public double getD() {
-            return m_D;
-        }
-
-        /**
-         * Return the current PID result for the last input set with setInput().
-         * This is always centered on zero and constrained the the max and min outs
-         *
-         * @return the latest calculated output
-         */
-        public double performPID() {
-            calculate();
-            return m_result;
-        }
-
-        /**
-         * Return the current PID result for the specified input.
-         *
-         * @param input The input value to be used to calculate the PID result.
-         *              This is always centered on zero and constrained the the max and min outs
-         * @return the latest calculated output
-         */
-        public double performPID(double input) {
-            setInput(input);
-            return performPID();
-        }
-
-        /**
-         * Set the PID controller to consider the input to be continuous,
-         * Rather then using the max and min in as constraints, it considers them to
-         * be the same point and automatically calculates the shortest route to
-         * the setpoint.
-         *
-         * @param continuous Set to true turns on continuous, false turns off continuous
-         */
-        public void setContinuous(boolean continuous) {
-            m_continuous = continuous;
-        }
-
-        /**
-         * Set the PID controller to consider the input to be continuous,
-         * Rather then using the max and min in as constraints, it considers them to
-         * be the same point and automatically calculates the shortest route to
-         * the setpoint.
-         */
-        public void setContinuous() {
-            this.setContinuous(true);
-        }
-
-        /**
-         * Sets the maximum and minimum values expected from the input.
-         *
-         * @param minimumInput the minimum value expected from the input
-         * @param maximumInput the maximum value expected from the output
-         */
-        public void setInputRange(double minimumInput, double maximumInput) {
-            m_minimumInput = (minimumInput);
-            m_maximumInput = (maximumInput);
-            setSetpoint(m_setpoint);
-        }
-
-        /**
-         * Sets the minimum and maximum values to write.
-         *
-         * @param minimumOutput the minimum value to write to the output, always positive
-         * @param maximumOutput the maximum value to write to the output, always positive
-         */
-        public void setOutputRange(double minimumOutput, double maximumOutput) {
-            m_minimumOutput = Math.abs(minimumOutput);
-            m_maximumOutput = Math.abs(maximumOutput);
-        }
-
-        /**
-         * Set the setpoint for the PIDController
-         *
-         * @param setpoint the desired setpoint
-         */
-        public void setSetpoint(double setpoint) {
-            int sign = 1;
-
-            if (m_maximumInput > m_minimumInput) {
-                if (setpoint < 0) sign = -1;
-
-                if (Math.abs(setpoint) > m_maximumInput) m_setpoint = m_maximumInput * sign;
-                else if (Math.abs(setpoint) < m_minimumInput) m_setpoint = m_minimumInput * sign;
-                else m_setpoint = setpoint;
-            } else m_setpoint = setpoint;
-        }
-
-        /**
-         * Returns the current setpoint of the PIDController
-         *
-         * @return the current setpoint
-         */
-        public double getSetpoint() {
-            return m_setpoint;
-        }
-
-        /**
-         * Retruns the current difference of the input from the setpoint
-         *
-         * @return the current error
-         */
-        public synchronized double getError() {
-            return m_error;
-        }
-
-        /**
-         * Set the percentage error which is considered tolerable for use with
-         * OnTarget. (Input of 15.0 = 15 percent)
-         *
-         * @param percent error which is tolerable
-         */
-        public void setTolerance(double percent) {
-            m_tolerance = percent;
-        }
-
-        /**
-         * Return true if the error is within the percentage of the total input range,
-         * determined by setTolerance. This assumes that the maximum and minimum input
-         * were set using setInputRange.
-         *
-         * @return true if the error is less than the tolerance
-         */
-        public boolean onTarget() {
-            return (Math.abs(m_error) < Math.abs(m_tolerance / 100 * (m_maximumInput - m_minimumInput)));
-        }
-
-        /**
-         * Begin running the PIDController
-         */
-        public void enable() {
-            m_enabled = true;
-        }
-
-        /**
-         * Stop running the PIDController.
-         */
-        public void disable() {
-            m_enabled = false;
-        }
-
-        /**
-         * Reset the previous error,, the integral term, and disable the controller.
-         */
-        public void reset() {
-            disable();
-            m_prevError = 0;
-            m_totalError = 0;
-            m_result = 0;
-        }
-
-        /**
-         * Set the input value to be used by the next call to performPID().
-         *
-         * @param input Input value to the PID calculation.
-         */
-        public void setInput(double input) {
-            int sign = 1;
-
-            if (m_maximumInput > m_minimumInput) {
-                if (input < 0) sign = -1;
-
-                if (Math.abs(input) > m_maximumInput) m_input = m_maximumInput * sign;
-                else if (Math.abs(input) < m_minimumInput) m_input = m_minimumInput * sign;
-                else m_input = input;
-            } else m_input = input;
-        }
-    }
-    /**
-     * Set the input value for integrated PID.
-     *
-     * @param NEW_P Input value to the PID calculation.
-     * @param NEW_I
-     * @param NEW_D
-     *
-     */
-    protected void setPID(double NEW_P, double NEW_I, double NEW_D) {
-        /**
-         * Created by tom on 9/26/17.
-         * This assumes that you are using a REV Robotics Expansion Hub
-         * as your DC motor controller. This op mode uses the extended/enhanced
-         * PID-related functions of the DcMotorControllerEx class.
-         * The REV Robotics Expansion Hub supports the extended motor controller
-         * functions, but other controllers (such as the Modern Robotics and
-         * Hitechnic DC Motor Controllers) do not.
-         */
-
-        // get a reference to the motor controller and cast it as an extended functionality controller.
-        // we assume it's a REV Robotics Expansion Hub (which supports the extended controller functions).
-        DcMotorControllerEx lmotorControllerEx = (DcMotorControllerEx) leftMotor.getController();
-        DcMotorControllerEx rmotorControllerEx = (DcMotorControllerEx) rightMotor.getController();
-
-        // get the port number of our configured motor.
-        int lmotorIndex = leftMotor.getPortNumber();
-        int rmotorIndex = rightMotor.getPortNumber();
-
-        // get the PID coefficients for the RUN_USING_ENCODER  modes.
-        PIDCoefficients lpidOrig = lmotorControllerEx.getPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
-        PIDCoefficients rpidOrig = rmotorControllerEx.getPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // change coefficients.
-        PIDCoefficients lpidNew = new PIDCoefficients(NEW_P, NEW_I, NEW_D);
-        PIDCoefficients rpidNew = new PIDCoefficients(NEW_P, NEW_I, NEW_D);
-        lmotorControllerEx.setPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, lpidNew);
-        rmotorControllerEx.setPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, rpidNew);
-
-        // re-read coefficients and verify change.
-        PIDCoefficients lpidModified = lmotorControllerEx.getPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
-        PIDCoefficients rpidModified = lmotorControllerEx.getPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // display info to user.
-        while (opModeIsActive())
-
-        {
-            telemetry.addData("Runtime", "%.03f", getRuntime());
-            telemetry.addData("Left P,I,D (orig)", "%.04f, %.04f, %.0f", lpidOrig.p, lpidOrig.i, lpidOrig.d);
-            telemetry.addData("Right P,I,D (orig)", "%.04f, %.04f, %.0f", rpidOrig.p, rpidOrig.i, rpidOrig.d);
-            telemetry.addData("Left P,I,D (modified)", "%.04f, %.04f, %.04f", lpidModified.p, lpidModified.i, lpidModified.d);
-            telemetry.addData("Right P,I,D (modified)", "%.04f, %.04f, %.04f", rpidModified.p, rpidModified.i, rpidModified.d);
-
-            telemetry.update();
-
-        }
-    }
 }
