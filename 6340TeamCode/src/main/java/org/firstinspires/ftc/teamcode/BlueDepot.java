@@ -30,10 +30,10 @@ public class BlueDepot extends Team6340Controls {
         gyroDrive(DRIVE_SPEED, 43, 50, 10 );    //Move forward 43 inches
         gyroTurn(TURN_SPEED, 320, 5);                    //turn 320 degrees right
         gyroDrive(DRIVE_SPEED, 45, 320, 10);    //move forward 43 inches
-        trophy.setPosition(.75);                                        // drop trophy
+        trophy.setPosition(.75);                                        // drop trophy set servo .75/up
         gyroTurn(TURN_SPEED, 235, 5);                    //turn 90 degrees right
         gyroDrive(DRIVE_SPEED, 108,235,20);      //move forward 108 inches
-
+        trophy.setPosition(.40);                                         //set servo to .40/down
 
    }
 }
