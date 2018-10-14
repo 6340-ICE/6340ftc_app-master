@@ -65,9 +65,9 @@ public abstract class Team6340Controls extends LinearOpMode {
     ColorSensor blueSensorColor;
 
     //Initlize encoder variables
-    protected double COUNTS_PER_MOTOR_REV = 1120;    // eg: Andymark Encoder
+    protected double COUNTS_PER_MOTOR_REV = 288;    // Rev Hex Motor 288
     protected double DRIVE_GEAR_REDUCTION = 1;     // This is < 1.0 if geared UP
-    protected double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    protected double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
     protected double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
     // These constants define the desired driving/control characteristics
@@ -106,7 +106,7 @@ public abstract class Team6340Controls extends LinearOpMode {
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         //Reverse the right motors so all motors move forward when set to a positive speed.
-        rightMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        leftMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
