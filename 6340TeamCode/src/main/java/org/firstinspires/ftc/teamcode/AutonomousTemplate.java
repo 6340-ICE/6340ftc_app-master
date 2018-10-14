@@ -10,7 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 //Define as Autonomous
 @Disabled
 @Autonomous(name = "AutoTemplate", group = "Linear Opmode")
-public class AutonomousTemplate extends Team6340Controls {
+public class
+AutonomousTemplate extends Team6340Controls {
 
     @Override
     public void runOpMode() {
