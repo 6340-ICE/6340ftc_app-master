@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.sun.tools.javac.comp.Todo;
 
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -58,7 +59,7 @@ public abstract class Team6340Controls extends LinearOpMode {
 
 
     //Instantiate servos
-    protected Servo blueColorServo;
+    protected Servo trophy;
 
 
     //Instantiate sensors
@@ -111,7 +112,7 @@ public abstract class Team6340Controls extends LinearOpMode {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Initialize the servos
-       //blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
+       trophy = hardwareMap.get(Servo.class, "trophy");
 
         //Initialize sensors
         //blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
