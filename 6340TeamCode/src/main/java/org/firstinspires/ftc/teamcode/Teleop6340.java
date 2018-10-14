@@ -25,7 +25,7 @@ public class Teleop6340 extends Team6340Controls {
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
-        telemetry.addData("Status", "Waiting for start boi.");
+        telemetry.addData("Status", "Waiting for Start.");
         telemetry.update();
         waitForStart();
 
@@ -36,8 +36,8 @@ public class Teleop6340 extends Team6340Controls {
             double angle = AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
 
             // Control the chassis
-                leftMotor.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_x);
-                rightMotor.setPower(-gamepad1.left_stick_y + gamepad1.right_stick_x);
+                leftMotor.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
+                rightMotor.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
             }
 
 
