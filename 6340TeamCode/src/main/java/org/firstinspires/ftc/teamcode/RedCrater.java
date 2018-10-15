@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 //TODO further testing of rev robotics hex motor encoders
-//TODO test on wednesday
+//TODO test on wednesday..
 
 //Import FTC modules
 
