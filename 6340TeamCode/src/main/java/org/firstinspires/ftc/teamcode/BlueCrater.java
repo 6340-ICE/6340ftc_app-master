@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 //Define as Autonomous
-@Disabled
+//@Disabled
 @Autonomous(name = "BlueCrater", group = "Linear Opmode")
 public class
 BlueCrater extends Team6340Controls {
@@ -28,9 +28,11 @@ BlueCrater extends Team6340Controls {
         gyroTurn(TURN_SPEED, 45, 5);                     // Turn 45 degrees left
         gyroDrive(DRIVE_SPEED, 42, 45, 10);     // Move Forward 42"
         gyroTurn(TURN_SPEED, 130, 5);                   // Turn Left 90 degrees (Heading 130)
-        gyroDrive(DRIVE_SPEED, 66, 130, 10);   // Move forward 66"
-        trophy.setPosition(.75);                                     // Deliver Trophy
+        gyroDrive(DRIVE_SPEED, 66, 130, 100);   // Move forward 66"
+        trophy.setPosition(.75);// Deliver Trophy
+        gyroTurn(TURN SPEED, 45, 5);
+        gyroTurn(TURN SPEED, 130, 5);
         gyroDrive(DRIVE_SPEED, -100, 130, 10); // Move Reverse 100"
         trophy.setPosition(.40);                                    //Resets the servo
         //program written but not tested
-}
+}}
