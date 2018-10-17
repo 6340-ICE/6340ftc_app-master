@@ -31,8 +31,9 @@ RedCrater extends Team6340Controls {
        gyroDrive(DRIVE_SPEED, 42, 45);      // Move Forward 42 Degrees
        gyroTurn(TURN_SPEED, 135, 5);        // Turn Left 90 Degrees (Heading 130 Inches)
        gyroDrive(DRIVE_SPEED, 66, 135);     // Move Forward 66 Inches
-       trophy.setPosition(.75);                           // Deliver Trophy
-       gyroDrive(DRIVE_SPEED, -100, 135);   // Move Reverse 100 Inches
+       gyroTurn(TURN_SPEED, 315, 5);
+        trophy.setPosition(.75);                           // Deliver Trophy
+       gyroDrive(DRIVE_SPEED, 100, 135);   // Move Reverse 100 Inches
 
 
    }
