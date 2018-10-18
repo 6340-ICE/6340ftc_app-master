@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 //TODO further testing of rev robotics hex motor encoders
 //TODO test on wednesday...
-
+//TODO fix turn towards crater
 //Import FTC modules
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
