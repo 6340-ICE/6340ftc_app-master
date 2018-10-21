@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 //Define as Autonomous
-//@Disabled
+@Disabled
 @Autonomous(name = "RedCrater", group = "Linear Opmode")
 public class
 RedCrater extends Team6340Controls {
@@ -32,9 +32,9 @@ RedCrater extends Team6340Controls {
        gyroTurn(TURN_SPEED, 135, 5);        // Turn Left 90 Degrees (Heading 130 Inches)
        gyroDrive(DRIVE_SPEED, 66, 135);     // Move Forward 66 Inches
        gyroTurn(TURN_SPEED, 315, 5);
-        trophy.setPosition(.75);                           // Deliver Trophy
+        trophy.setPosition(.7);                           // Deliver Trophy
        gyroDrive(DRIVE_SPEED, 100, 135);   // Move Reverse 100 Inches
-
+        trophy.setPosition(1.0);                          //Reset Servo to down
 
    }
 }

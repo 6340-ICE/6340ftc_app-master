@@ -43,13 +43,13 @@ public class Teleop6340 extends Team6340Controls {
                //trophy pad up press y/yellow
                 if (gamepad1.y)
                 {
-                    trophy.setPosition(.75);
+                    trophy.setPosition(.7);            //servo up
                 }
 
                 //trophy pad down press x/blue
                 if (gamepad1.x)
                 {
-                    trophy.setPosition(.40);
+                    trophy.setPosition(1.0);            //servo down
                 }
             }
 
