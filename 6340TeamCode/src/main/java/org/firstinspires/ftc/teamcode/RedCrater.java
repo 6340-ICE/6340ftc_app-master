@@ -15,7 +15,7 @@ public class
 RedCrater extends Team6340Controls {
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         // Initialize the hardware
         initializeHardware();
 
@@ -33,7 +33,8 @@ RedCrater extends Team6340Controls {
        gyroDrive(DRIVE_SPEED, 66, 135);     // Move Forward 66 Inches
        gyroTurn(TURN_SPEED, 315, 5);
         trophy.setPosition(.7);                           // Deliver Trophy
-       gyroDrive(DRIVE_SPEED, 100, 135);   // Move Reverse 100 Inches
+        gyroHold(TURN_SPEED, 135,1);                                             //Wait 1.5 second
+        gyroDrive(DRIVE_SPEED, 100, 135);   // Move Reverse 100 Inches
         trophy.setPosition(1.0);                          //Reset Servo to down
 
    }
