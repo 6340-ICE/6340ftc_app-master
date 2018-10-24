@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 //TODO redo all auto after land
+//TODO make smaller lifting mechanism
 //Import FTC modules
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -25,14 +26,11 @@ public class Depot extends Team6340Controls {
         // Insert Autonomous Code Here
 
         lift(-.5,16,10);//Land
-        gyroTurn(TURN_SPEED, 50, 5);                     //Turn 50 degrees left
-        gyroDrive(DRIVE_SPEED, 40, 50, 10 );    //Move forward 43 inches
-        gyroTurn(TURN_SPEED, 320, 5);                    //turn 320 degrees right
-        gyroDrive(DRIVE_SPEED, 50, 320, 10);    //move forward 43 inches
-        gyroTurn(TURN_SPEED, 235, 5);                   //turn 90 degrees right
+        gyroDrive(DRIVE_SPEED, 60, 0, 10 );    //Move forward 43 inches
         trophy.setPosition(.7);                                       // drop trophy set servo .7/up
-        gyroHold(TURN_SPEED,235,1);                                             //Wait 1.5 second
-        gyroDrive(DRIVE_SPEED, 110,235,20);     //move forward 108 inches
+       gyroHold(TURN_SPEED, 0, 1);                      //stop for 1 sec
+        gyroTurn(TURN_SPEED, 240, 5);                    //turn 320 degrees right
+        gyroDrive(DRIVE_SPEED, 67, 240, 10);    //move forward 43 inches
         trophy.setPosition(1.0);                                         //set servo to .40/down
 
    }
