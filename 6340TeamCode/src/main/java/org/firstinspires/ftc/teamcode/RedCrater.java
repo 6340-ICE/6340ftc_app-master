@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-//TODO further testing of rev robotics hex motor encoders
-//TODO test on wednesday...
-//TODO fix turn towards crater
+//TODO redo all auto after land
+
 //Import FTC modules
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -26,7 +25,7 @@ RedCrater extends Team6340Controls {
         waitForStart();
 
         // Insert Autonomous Code Here
-
+        lift(-.5,16,10);//Land
        gyroTurn(TURN_SPEED, 45, 5);         // Turn 45 Degrees Left
        gyroDrive(DRIVE_SPEED, 47, 45);      // Move Forward 42 Degrees
        gyroTurn(TURN_SPEED, 135, 5);        // Turn Left 90 Degrees (Heading 130 Inches)

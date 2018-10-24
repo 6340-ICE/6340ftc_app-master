@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-//TODO further testing of rev robotics hex motor encoders
-//TODO Test on Field
+//TODO redo all auto after land
+
 //Import FTC modules
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 //@Disabled
 @Autonomous(name = "Crater", group = "Linear Opmode")
 public class
-BlueCrater extends Team6340Controls {
+Crater extends Team6340Controls {
 
     @Override
     public void runOpMode() {
@@ -25,6 +25,7 @@ BlueCrater extends Team6340Controls {
         waitForStart();
 
         // Insert Autonomous Code Here
+        lift(-.5,16,10);//Land
         gyroTurn(TURN_SPEED, 45, 5);                       // Turn 45 degrees left
         gyroDrive(DRIVE_SPEED, 47, 45, 10);      // Move Forward 42"
         gyroTurn(TURN_SPEED, 130, 5);                   // Turn Left 90 degrees (Heading 130)

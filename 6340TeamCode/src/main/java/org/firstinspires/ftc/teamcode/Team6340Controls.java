@@ -68,9 +68,11 @@ public abstract class Team6340Controls extends LinearOpMode {
 
     //Initlize encoder variables
     protected double COUNTS_PER_MOTOR_REV = 288;    // Rev Hex Motor 288
+    protected double COUNTS_PER_MOTOR = 280;    // andyMark 40
     protected double DRIVE_GEAR_REDUCTION = 1;     // This is < 1.0 if geared UP
     protected double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
     protected double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+   // protected double COUNTS_PER_INCH_LIFT = (COUNTS_PER_MOTOR );
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
@@ -327,7 +329,51 @@ public abstract class Team6340Controls extends LinearOpMode {
             rightDrive(0);
         }
     }
+    public void lift(double speed,
+                             double liftInches,
+                             double timeout) {
+        int newLiftTarget;
 
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLiftTarget = liftMotor.getCurrentPosition() + (int)(liftInches * COUNTS_PER_MOTOR);
+            liftMotor.setTargetPosition(newLiftTarget);
+
+            // Turn On RUN_TO_POSITION
+            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            liftMotor.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                 (runtime.seconds() < timeout) &&
+                  (liftMotor.isBusy())) {
+
+                // Display it for the driver.
+               telemetry.addData("Path1",  "Running", newLiftTarget);
+               telemetry.addData("Path2",  "Running",
+                     liftMotor.getCurrentPosition());
+               telemetry.update();
+            }
+
+            // Stop all motion;
+            liftMotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
+    }
     /**
      * Method to drive on a fixed compass bearing (angle), based on encoder counts.
      * Move will stop if either of these conditions occur:
@@ -517,14 +563,7 @@ public abstract class Team6340Controls extends LinearOpMode {
         return absoluteAngle;
 
     }
-    /**
-     * Sets the speed of the lifting mechanism.
 
-     **/
-    protected void lift(double power) {
-        liftMotor.setPower(power);
-
-    }
 
 
 

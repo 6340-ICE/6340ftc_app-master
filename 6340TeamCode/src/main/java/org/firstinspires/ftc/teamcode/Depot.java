@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-//TODO further testing of rev robotics hex motor encoders
-//TODO Test on Field
-
+//TODO redo all auto after land
 //Import FTC modules
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 //Define as Autonomous
 //@Disabled
 @Autonomous(name = "Depot", group = "Linear Opmode")
-public class BlueDepot extends Team6340Controls {
+public class Depot extends Team6340Controls {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,7 +24,7 @@ public class BlueDepot extends Team6340Controls {
 
         // Insert Autonomous Code Here
 
-        //Land
+        lift(-.5,16,10);//Land
         gyroTurn(TURN_SPEED, 50, 5);                     //Turn 50 degrees left
         gyroDrive(DRIVE_SPEED, 40, 50, 10 );    //Move forward 43 inches
         gyroTurn(TURN_SPEED, 320, 5);                    //turn 320 degrees right
