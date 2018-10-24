@@ -92,7 +92,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 @TeleOp(name="Concept: 6340 Vuforia Rover Nav", group ="Concept")
-//@Disabled
+@Disabled
 public class Team6340ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
     /*
