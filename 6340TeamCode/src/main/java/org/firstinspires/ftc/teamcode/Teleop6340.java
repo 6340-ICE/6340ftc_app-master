@@ -36,21 +36,24 @@ public class Teleop6340 extends Team6340Controls {
             double angle = AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
 
 
-            // Control the chassis
+            // Control the chassis Gamepad1 controls driving Gamepad2 controls liftng and trophy
                 leftMotor.setPower(-gamepad1.left_stick_y + gamepad1.right_stick_x);
                 rightMotor.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_x);
+                liftMotor.setPower(-gamepad2.right_stick_y);                             //gamepad2 raise and lower lift
 
                //trophy pad up press y/yellow
-                if (gamepad1.y)
+                if (gamepad2.y)
                 {
                     trophy.setPosition(.7);            //servo up
                 }
 
                 //trophy pad down press x/blue
-                if (gamepad1.x)
+                if (gamepad2.x)
                 {
                     trophy.setPosition(1.0);            //servo down
                 }
+
+
             }
 
 

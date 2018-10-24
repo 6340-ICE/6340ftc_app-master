@@ -56,6 +56,7 @@ public abstract class Team6340Controls extends LinearOpMode {
 
     protected DcMotorEx leftMotor;
     protected DcMotorEx rightMotor;
+    protected DcMotorEx liftMotor;
 
 
     //Instantiate servos
@@ -97,19 +98,25 @@ public abstract class Team6340Controls extends LinearOpMode {
         //Begin with the chassis
         leftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftMotor");
         rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightMotor");
+        liftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "liftMotor");
 
 
         //Reset the encoders on the chassis to 0
         leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         //Set the motor modes
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
         //Reverse the right motors so all motors move forward when set to a positive speed.
         leftMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         //Initialize the servos
        trophy = hardwareMap.get(Servo.class, "trophy");
@@ -510,7 +517,14 @@ public abstract class Team6340Controls extends LinearOpMode {
         return absoluteAngle;
 
     }
+    /**
+     * Sets the speed of the lifting mechanism.
 
+     **/
+    protected void lift(double power) {
+        liftMotor.setPower(power);
+
+    }
 
 
 
