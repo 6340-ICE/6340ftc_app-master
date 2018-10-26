@@ -37,9 +37,19 @@ public class Teleop6340 extends Team6340Controls {
 
 
             // Control the chassis Gamepad1 controls driving Gamepad2 controls liftng and trophy
-                leftMotor.setPower(-gamepad1.left_stick_y + gamepad1.right_stick_x);
-                rightMotor.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_x);
+            if (gamepad1.right_trigger < .5)
+            {
+                leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 1.5); //closer to 1.0 is faster 2.0 is half speed
+                rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 1.5); //closer to 1.0 is faster 1.5 is 2/3 speed
                 liftMotor.setPower(-gamepad2.right_stick_y);                             //gamepad2 raise and lower lift
+            }
+
+            if (gamepad1.right_trigger > .5)
+            {
+                leftMotor.setPower(-gamepad1.left_stick_y + gamepad1.right_stick_x); //Full Speed
+                rightMotor.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_x); //Full Speed
+                liftMotor.setPower(-gamepad2.right_stick_y);                             //gamepad2 raise and lower lift
+            }
 
                //trophy pad up press y/yellow
                 if (gamepad2.y)
