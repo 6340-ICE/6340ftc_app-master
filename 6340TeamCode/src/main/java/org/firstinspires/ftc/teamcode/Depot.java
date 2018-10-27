@@ -30,7 +30,7 @@ public class Depot extends Team6340Controls {
         trophy.setPosition(.7);                                       // drop trophy set servo .7/up
        gyroHold(TURN_SPEED, 0, 1);                      //stop for 1 sec
         gyroTurn(TURN_SPEED, 215, 5);                    //turn 320 degrees right
-        gyroDrive(DRIVE_SPEED, 70, 215, 10);    //move forward 43 inches
+        gyroDrive(DRIVE_SPEED, 72, 215, 10);    //move forward 43 inches
         trophy.setPosition(1.0);                                         //set servo to .40/down
 
    }
